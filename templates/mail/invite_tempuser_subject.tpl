@@ -1,0 +1,1 @@
+{tr _0=$prefs.browsertitle}Your temporary access to %0{/tr}

@@ -1,0 +1,24 @@
+## Tiki.gitignore - read more here: https://github.com/github/gitignore
+# Ignore binaries
+/bin/
+# Ignore local.php
+/db/local.php
+# Ignore file upload directories
+/files/forums/
+/files/templates/
+/img/trackers/
+/img/wiki_up/
+# Ignore system caches
+/modules/cache/
+/temp/
+/templates_c/
+# Ignore vendor folders, they are managed by composer
+/vendor/
+# Ignore PhpStorm
+.idea/
+# Ignore Subversion
+.svn/
+# Ignore Addons
+/addons/**
+!/addons/index.php
+/patches
