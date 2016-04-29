@@ -252,4 +252,62 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 		}
 		return false;
 	}
+
+	/**
+	 * Checks if an addon is installed and activated via its activating preference.
+	 *
+	 * @param $folder
+	 * @return bool
+	 */
+	function checkAddonActivated($folder) {
+		if(!$this->isInstalled($folder)) {
+			return false;
+		}
+		if (strpos($folder, '/') !== false && strpos($folder, '_') === false) {
+			$folder = str_replace('/', '_', $folder);
+		}
+		$prefname = 'ta_' . $folder . '_on';
+		$activated = isset($GLOBALS['prefs'][$prefname]) && $GLOBALS['prefs'][$prefname] == 'y';
+
+		return $activated;
+	}
+
+	/**
+	 * Return paths for activated addons.
+	 * 
+	 * @return array
+	 */
+	function getActivatedPaths() {
+		$paths = array();
+
+		foreach(TikiAddons::getPaths() as $package => $path) {
+			if ($this->checkAddonActivated($package)) {
+				$paths[$package] = $path;
+			}
+		}
+
+		return $paths;
+	}
+
+	/**
+	 * Returns addons depending on $package.
+	 *
+	 * @param $package
+	 * @return array
+	 */
+	function getDependingAddons($package) {
+		$depending = array();
+		foreach (\Tikiaddons::getAvailable() as $conf) {
+			$version = $this->getLastVersionInstalled($conf->package);
+			if ($version != null) {
+				foreach ($conf->depends as $depends) {
+					if ($depends->package == $package) {
+						$depending[] = $conf;
+						break;
+					}
+				}
+			}
+		}
+		return $depending;
+	}
 }
