@@ -3,7 +3,7 @@
 //
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-// $Id: Addon.php 57968 2016-03-17 20:06:57Z jonnybradley $
+// $Id$
 
 class TikiAddons_Addon
 {
@@ -18,13 +18,12 @@ class TikiAddons_Addon
 		if (strpos($folder, '/') !== false && strpos($folder, '_') === false) {
 			$folder = str_replace('/', '_', $folder);
 		}
-		$prefname = 'ta_' . $folder . '_on';
-			if (!isset($GLOBALS['prefs'][$prefname]) || $GLOBALS['prefs'][$prefname] != 'y') {
+		$this->utilities = new TikiAddons_Utilities;
+		if (!$this->utilities->checkAddonActivated($folder)) {
 			throw new Exception(tra('Addon is not activated: ') . $folder);
 		}
 		$file = TIKI_PATH . "/addons/$folder/tikiaddon.json";
 		$this->configuration = json_decode(file_get_contents($file));
-		$this->utilities = new TikiAddons_Utilities;
 		$this->utilities->checkDependencies($this->getFolder());
 		$this->utilities->checkProfilesInstalled($this->getFolder(), $this->getVersion());
 		if ($this->configuration->smarty) {
