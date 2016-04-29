@@ -65,7 +65,7 @@ class AddonInstallCommand extends Command
 			$addon_utilities->checkDependencies($folder);
 		}
 
-		$addons = \TikiAddons::getInstalled();
+		$addons = \TikiAddons::getAvailable();
 		$tikilib = \TikiLib::lib('tiki');
 		$installer = new \Tiki_Profile_Installer;
 

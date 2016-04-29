@@ -17,7 +17,7 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 		$installed = array();
 		$versions = array();
 		$depends = array();
-		foreach (Tikiaddons::getInstalled() as $conf) {
+		foreach (Tikiaddons::getAvailable() as $conf) {
 			if ($package == $conf->package) {
 				$depends = $conf->depends;
 			}
