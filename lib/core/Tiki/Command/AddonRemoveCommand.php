@@ -30,6 +30,11 @@ class AddonRemoveCommand extends Command
 				null,
 				InputOption::VALUE_NONE,
 				'Confirm deletion of objects'
+			)->addOption(
+				'ignoredepends',
+				null,
+				InputOption::VALUE_NONE,
+				'Ignore dependencies.'
 			);
 	}
 
@@ -44,6 +49,11 @@ class AddonRemoveCommand extends Command
 		} else {
 			$package = str_replace('_', '/', $addonName);
 			$folder = $addonName;
+		}
+
+		$ignoredepends = $input->getOption('ignoredepends');
+		if (!$ignoredepends) {
+			$this->checkDependingAddons($package);
 		}
 
 		$repository = 'file://addons/' . $folder . '/profiles';
@@ -122,6 +132,24 @@ class AddonRemoveCommand extends Command
 				$addon_utilities->forgetProfileAllVersions($folder, $profileName);
 				$output->writeln("Profile $profileName forgotten from addon registry.");
 			}
+		}
+	}
+
+	/**
+	 * Checks if there are installed addons depending on $package. Throws exception if yes.
+	 *
+	 * @param $package
+	 * @throws Exception
+	 */
+	protected function checkDependingAddons($package) {
+		$utilities = new \TikiAddons_Utilities();
+		$depending = $utilities->getDependingAddons($package);
+		if(!empty($depending)) {
+			$depending_names = array();
+			foreach ($depending as $depend) {
+				$depending_names[] = $depend->package;
+			}
+			throw new \Exception($package . tra(' cannot be removed because the following addons depend on it:') . implode('\n', $depending_names));
 		}
 	}
 }
