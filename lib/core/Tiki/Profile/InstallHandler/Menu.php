@@ -3,7 +3,7 @@
 // 
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-// $Id: Menu.php 57969 2016-03-17 20:07:40Z jonnybradley $
+// $Id$
 
 class Tiki_Profile_InstallHandler_Menu extends Tiki_Profile_InstallHandler
 {
@@ -26,8 +26,11 @@ class Tiki_Profile_InstallHandler_Menu extends Tiki_Profile_InstallHandler
 		$data['groups'] = serialize($data['groups']);
 
 		$position = 0;
-		foreach ( $data['items'] as &$item )
-			$this->fixItem($item, $position);
+		if ( isset( $data['items'])) {
+			foreach ($data['items'] as &$item) {
+				$this->fixItem($item, $position);
+			}
+		}
 
 		$items = array();
 		$this->flatten($data['items'], $items);
@@ -65,6 +68,10 @@ class Tiki_Profile_InstallHandler_Menu extends Tiki_Profile_InstallHandler
 			$item['groups'] = array();
 		if ( ! isset( $item['items'] ) )
 			$item['items'] = array();
+		if ( ! isset( $item['use_items_icons'] ) )
+			$item['use_items_icons'] = null;
+		if ( ! isset( $item['icon'] ) )
+			$item['icon'] = null;
 
 		if (! isset($item['position'])) {
 			$item['position'] = $position;
