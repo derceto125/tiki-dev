@@ -3,10 +3,17 @@
 // 
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-// $Id: Utilities.php 57968 2016-03-17 20:06:57Z jonnybradley $
+// $Id$
 
 class TikiAddons_Utilities extends TikiDb_Bridge
 {
+	/**
+	 * Check if all necessary addons are installed an addon depending on. Throws exception if not.
+	 *
+	 * @param $folder
+	 * @return bool
+	 * @throws Exception
+	 */
 	function checkDependencies($folder) {
 		if (strpos($folder, '/') !== false && strpos($folder, '_') === false) {
 			$package = $folder;
@@ -36,6 +43,14 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 		return true;
 	}
 
+	/**
+	 * Checks if all profiles of an addon are installed. Throws exception if not.
+	 *
+	 * @param $folder
+	 * @param $version
+	 * @return bool
+	 * @throws Exception
+	 */
 	function checkProfilesInstalled($folder, $version) {
 		if (strpos($folder, '/') !== false && strpos($folder, '_') === false) {
 			$package = $folder;
@@ -63,6 +78,13 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 		return true;
 	}
 
+	/**
+	 * Returns true if $version matches the criteria denoted by $pattern
+	 *
+	 * @param $version
+	 * @param $pattern
+	 * @return bool
+	 */
 	function checkVersionMatch($version, $pattern) {
 		$semanticVersion =$this->getSemanticVersion($version);
 		$semanticPattern = $this->getSemanticVersion($pattern);
@@ -201,6 +223,12 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 		}
 	}
 
+	/**
+	 * Returns last installed version of an addon or false if addon is not installed.
+	 *
+	 * @param $folder
+	 * @return bool|mixed
+	 */
 	function getLastVersionInstalled($folder) {
 		if (strpos($folder, '/') !== false && strpos($folder, '_') === false) {
 			$package = $folder;
