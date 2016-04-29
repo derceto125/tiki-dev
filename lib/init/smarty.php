@@ -9,7 +9,7 @@
  * @copyright (c) Copyright 2002-2016 by authors of the Tiki Wiki CMS Groupware Project. All Rights Reserved. See copyright.txt for details and a complete list of authors.
  * @licence Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
  */
-// $Id: smarty.php 57967 2016-03-17 20:06:16Z jonnybradley $
+// $Id$
 
 // die if called directly.
 if (strpos($_SERVER['SCRIPT_NAME'], basename(__FILE__)) !== FALSE) {
@@ -501,7 +501,8 @@ class Smarty_Tiki extends Smarty
 			$this->addTemplateDir(TIKI_PATH . "/themes/templates/"); //This dir stores templates for all the themes
 
 			//Addon templates
-			foreach (TikiAddons::getPaths() as $path) {
+			$utilities = new \TikiAddons_Utilities();
+			foreach ($utilities->getActivatedPaths() as $path) {
 				$this->addTemplateDir($path . '/templates/');
 			}
 		}
