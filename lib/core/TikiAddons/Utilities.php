@@ -199,6 +199,14 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 			$modlib = TikiLib::lib('mod');
 			$modlib->unassign_module($objectId);
 		}
+		if ($type == 'menu') {
+			$menulib = TikiLib::lib('menu');
+			$menulib->remove_menu($objectId);
+		}
+		if ($type == 'menuoption') {
+			$menulib = TikiLib::lib('menu');
+			$menulib->remove_menu_option($objectId);
+		}
 	}
 
 	function getObjectId($folder, $ref, $profile = '', $domain = '') {
