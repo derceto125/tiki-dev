@@ -3,7 +3,7 @@
 //
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-// $Id: prefslib.php 58426 2016-04-23 12:27:58Z jonnybradley $
+// $Id$
 
 class PreferencesLib
 {
@@ -105,6 +105,18 @@ class PreferencesLib
 		if (! $this->checkDatabaseFeatures($info['dbfeatures']) ) {
 			$info['available'] = false;
 			$info['notes'][] = tr('Unmatched system requirement. The database you are using does not support this feature.');
+		}
+
+		if ( substr($name, 0, 3) == 'ta_' ) {
+			$addon_utilities = new \TikiAddons_Utilities;
+			$midpos = strpos($name, '_', 3);
+			$pos = strpos($name, '_', $midpos + 1);
+			$file = substr($name, 0, $pos);
+			$package = str_replace('_', '/', substr($file, 3));
+			$info['available'] = $addon_utilities->isInstalled($package);
+			if (!$info['available']) {
+				$info['notes'][] = tr('This addon has not yet been installed yet. It needs to be installed first before it can be used.');
+			}
 		}
 
 		if (!isset($info['default'])) {	// missing default in prefs definition file?
@@ -972,6 +984,11 @@ class PreferencesLib
 		return false;
 	}
 
+	/**
+	 * Returns all addon activating preferences.
+	 * 
+	 * @return array
+	 */
 	public function getAddonPrefs()
 	{
 		global $prefs;
