@@ -3,7 +3,7 @@
 //
 // All Rights Reserved. See copyright.txt for details and a complete list of authors.
 // Licensed under the GNU LESSER GENERAL PUBLIC LICENSE. See license.txt for details.
-// $Id: theme.php 57965 2016-03-17 20:04:49Z jonnybradley $
+// $Id$
 
 //this script may only be included - so its better to die if called directly.
 $access->check_script($_SERVER['SCRIPT_NAME'], basename(__FILE__));
@@ -63,7 +63,8 @@ $headerlib->add_cssfile("themes/base_files/css/tiki_base.css");
 $headerlib->add_cssfile('vendor/fortawesome/font-awesome/css/font-awesome.min.css');
 
 //4) Add Addon custom css first, so it can be overridden by themes
-foreach (TikiAddons::getPaths() as $path) {
+$utilities = new \TikiAddons_Utilities();
+foreach ($utilities->getActivatedPaths() as $path) {
 	foreach (glob('addons/' . basename($path) . '/css/*.css') as $filename) {
 		$headerlib->add_cssfile($filename);
 	}
