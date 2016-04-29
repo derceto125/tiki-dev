@@ -232,13 +232,8 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 		} else {
 			$package = str_replace('_', '/', $folder);
 		}
-		$versions = array();
-		$result = $this->table('tiki_addon_profiles')->fetchAll(array('version'), array('addon' => $package));
-		foreach ($result as $res) {
-			$versions[] = $res['version'];
-		}
-		natsort($versions);
-		return array_pop($versions);
+		$version = $this->table('tiki_addon_profiles')->fetchOne('version', array('addon' => $package), array('install_date' => 'DESC'));
+		return $version;
 	}
 
 	function getFolderFromObject($type, $id) {
