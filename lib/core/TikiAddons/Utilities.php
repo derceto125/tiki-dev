@@ -28,8 +28,11 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 			if ($package == $conf->package) {
 				$depends = $conf->depends;
 			}
-			$versions[$conf->package] = $conf->version;
-			$installed[] = $conf->package;
+			$version = $this->getLastVersionInstalled($conf->package);
+			if ($version != null) {
+				$versions[$conf->package] = $version;
+				$installed[] = $conf->package;
+			}
 		}
 		foreach ($depends as $depend) {
 			if (!in_array($depend->package, $installed)) {
@@ -115,13 +118,7 @@ class TikiAddons_Utilities extends TikiDb_Bridge
 	}
 
 	function isInstalled($folder) {
-		$installed = array_keys(Tikiaddons::getInstalled());
-		if (strpos($folder, '/') !== false && strpos($folder, '_') === false) {
-			$package = $folder;
-		} else {
-			$package = str_replace('_', '/', $folder);
-		}
-		if (in_array($package, $installed)) {
+		if ($this->getLastVersionInstalled($folder)) {
 			return true;
 		} else {
 			return false;
