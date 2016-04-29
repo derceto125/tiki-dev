@@ -61,8 +61,29 @@ class AddonUpgradeCommand extends Command
 			return;
 		}
 
+		$addons = \TikiAddons::getAvailable();
+
 		if (!$ignoredepends) {
 			$addon_utilities->checkDependencies($folder);
+			$dependingaddons = $addon_utilities->getDependingAddons($package);
+			$incompatible = array();
+			if (!empty($dependingaddons)) {
+				$newversion = $addons[$package]->version;
+				foreach ($dependingaddons as $depender) {
+					foreach ($depender->depends as $depend) {
+						if ($depend->package == $package && !$addon_utilities->checkVersionMatch($newversion, $depend->version)) {
+							$incompatible[] = $depender;
+						}
+					}
+				}
+				if (!empty($incompatible)) {
+					$output->writeln("<info>Warning: some depending addons are incompatible with the upgraded version:");
+					foreach ($incompatible as $in) {
+						$output->writeln($in->package);
+					}
+					$output->writeln("</info>");
+				}
+			}
 		}
 
 		$upgradeInfo = json_decode(file_get_contents(TIKI_PATH . '/addons/' . $folder . '/upgrade.json'));
@@ -85,7 +106,7 @@ class AddonUpgradeCommand extends Command
 			}
 		}
 
-		$addons = \TikiAddons::getInstalled();
+
 
 		if (!$config) {
 			if (strnatcmp($lastVersionInstalled, $addons[$package]->version) <= 0) {
