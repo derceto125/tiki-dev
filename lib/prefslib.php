@@ -113,9 +113,10 @@ class PreferencesLib
 			$pos = strpos($name, '_', $midpos + 1);
 			$file = substr($name, 0, $pos);
 			$package = str_replace('_', '/', substr($file, 3));
+			$info['package'] = $package;
 			$info['available'] = $addon_utilities->isInstalled($package);
 			if (!$info['available']) {
-				$info['notes'][] = tr('This addon has not yet been installed yet. It needs to be installed first before it can be used.');
+				$info['notes'][] = tr('This addon has not yet been installed. It needs to be installed first before it can be used.');
 			}
 		}
 
@@ -197,6 +198,9 @@ class PreferencesLib
 			if (!empty($info['plugin'])) {
 				$icon = smarty_function_icon(array( 'name' => 'plugin'), $smarty);
 				$info['popup_html'] .= '<li><a class="icon" href="'.$info['plugin'].'">' . $icon . ' ' . tra('Plugins').'</a></li>';
+			}
+			if (!empty($info['package'])) {
+				$this->makeAddonPopupActions($info);
 			}
 			$info['popup_html'] .= '</ul>';
 		}
@@ -999,6 +1003,21 @@ class PreferencesLib
 			}
 		}
 		return $ret;
+	}
+
+	/**
+	 * Adds available addon actions to preference popup menu.
+	 *
+	 * @param $info
+	 */
+	private function makeAddonPopupActions(&$info)
+	{
+		if ($info['available']) {
+			$info['popup_html'] .= '<li><a class="icon" href="#">' . tra('Uninstall').'</a></li>';
+		}
+		else {
+			$info['popup_html'] .= '<li><a class="icon" href="#">' . tra('Install').'</a></li>';
+		}
 	}
 }
 
